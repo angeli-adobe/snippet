@@ -1,0 +1,34 @@
+function duplicateElement(node) {
+  const clone = node.cloneNode(true);
+
+  clone.querySelector("span.text").innerHTML = "Purchase";
+  clone.onclick = onClickFunction;
+
+  // Insert the clone before the original node
+  node.parentNode.insertBefore(clone, node);
+}
+
+let selector = "#main-content > div.pdp > div.pdp__item > div.product-details > div.product-add-to-shopping-bag-button"
+let node = document.querySelector(selector);
+
+duplicateElement(node)
+
+function onClickFunction(myEvent) {
+  let trackingData = JSON.parse(myEvent.target.attributes["data-ytos-track"].value)
+
+  // _satellite.setVar("Product - Description", "Crew Neck Jumpers")
+  // _satellite.setVar("Product - Category", "Pullover")
+  // _satellite.setVar("Product - Name", "Jumper with Graffiti Multicolor jacquard motif")
+  // _satellite.setVar("Product - Price", 890)
+  // _satellite.setVar("Product - SKU", "1647597322308592p")
+  _satellite.setVar("F Product - Description", trackingData["product_eng_micro"])
+  _satellite.setVar("F Product - Category", trackingData["product_macro_category"])
+  _satellite.setVar("F Product - Name", trackingData["product_eng_title"])
+  _satellite.setVar("F Product - Price", trackingData["product_price"])
+  _satellite.setVar("F Product - SKU", trackingData["product_id"])
+
+
+  const event = new CustomEvent('ferrariPurchase');
+  document.dispatchEvent(event);
+  console.log("Purchase clicked");
+}
