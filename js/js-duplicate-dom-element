@@ -1,34 +1,78 @@
+// PREREQUISITES
+- identify the button to be replaced, copy the selector and paste in the variable "selector"
+- find a popup in the website, copy the HTML and past in the "string" variable (pay attention to the quotes and double quotes)
+
+
+// Define the selector of the node you want to duplicate.
+let selector = "[data-testid='continue-button-cart-sidebar']";
+// String of the DOM Element that represens the modal in the website
+let string = '';
+
+// This code snippet duplicates a given DOM element, changes its text content to "Purchase", adds an event listener to it, and then inserts it before the original element before removing the original element from the DOM.
 function duplicateElement(node) {
+  //   Clone the original node
   const clone = node.cloneNode(true);
 
-  clone.querySelector("span.text").innerHTML = "Purchase";
+  // Change the text of the clone
+  // Sometimes the elements contains a div or span or just innerText
+  clone.innerHTML = "Purchase";
+
+  // Add an event listener to the clone that calls the onClickFunction
   clone.onclick = onClickFunction;
 
   // Insert the clone before the original node
   node.parentNode.insertBefore(clone, node);
+
+  // Remove the original node
+  node.remove();
 }
 
-let selector = "#main-content > div.pdp > div.pdp__item > div.product-details > div.product-add-to-shopping-bag-button"
-let node = document.querySelector(selector);
-
-duplicateElement(node)
 
 function onClickFunction(myEvent) {
-  let trackingData = JSON.parse(myEvent.target.attributes["data-ytos-track"].value)
 
-  // _satellite.setVar("Product - Description", "Crew Neck Jumpers")
-  // _satellite.setVar("Product - Category", "Pullover")
-  // _satellite.setVar("Product - Name", "Jumper with Graffiti Multicolor jacquard motif")
-  // _satellite.setVar("Product - Price", 890)
-  // _satellite.setVar("Product - SKU", "1647597322308592p")
-  _satellite.setVar("F Product - Description", trackingData["product_eng_micro"])
-  _satellite.setVar("F Product - Category", trackingData["product_macro_category"])
-  _satellite.setVar("F Product - Name", trackingData["product_eng_title"])
-  _satellite.setVar("F Product - Price", trackingData["product_price"])
-  _satellite.setVar("F Product - SKU", trackingData["product_id"])
-
-
-  const event = new CustomEvent('ferrariPurchase');
+  // Trigger the custom event
+  const event = new CustomEvent('hmPurchase');
   document.dispatchEvent(event);
-  console.log("Purchase clicked");
+  
+  // Create and append a popup
+  showModal(string)
+  console.log(">>>>> Purchase clicked!");
 }
+
+
+
+function showModal(xmlString) {
+
+  // Add the stylesheet to the document, if needed
+  let css = document.createElement("link")
+  css.rel = "stylesheet"
+  css.href = "https://www2.hm.com/index/_next/static/css/bced27795f6533aa.css"
+  document.head.appendChild(css)
+
+  // Add the modal to the document
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+  const htmlString = new XMLSerializer().serializeToString(xmlDoc);
+  const tempElement = document.createElement('div');
+  tempElement.innerHTML = htmlString;
+  const htmlNode = tempElement.firstElementChild;
+  document.body.appendChild(htmlNode);
+
+  //   Add event listener to close the modal
+  setTimeout(() => { 
+    document.getElementById("closeModal").addEventListener("click", removeModal); 
+  }, 1000);
+
+}
+
+function removeModal() {
+  const element = document.getElementById("portal");
+  element.remove(); // Removes the div with the 'div-02' id
+}
+
+//  Timeout to wait for the page to load and node to be found
+setTimeout(() => {
+  let node = document.querySelector(selector);
+  duplicateElement(node);
+}, 2000);
+
