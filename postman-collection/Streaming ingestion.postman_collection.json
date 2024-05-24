@@ -1,0 +1,54 @@
+{
+	"info": {
+		"_postman_id": "5624a80a-88b2-49ba-b904-2f8f7e6e9871",
+		"name": "Streaming ingestion",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27390028"
+	},
+	"item": [
+		{
+			"name": "Sending Events via Streaming API (Product View)",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var moment = require('moment')",
+							"pm.environment.set(\"TIMESTAMP\", moment.utc().format());",
+							"",
+							"console.log(moment.utc().format())"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"header\": {\n        \"schemaRef\": {\n            \"id\": \"https://ns.adobe.com/demopotemea/schemas/7390c88968c2015c0ef847e9ec4aa9e524b1ab584d64b4c5\",\n            \"contentType\": \"application/vnd.adobe.xed-full+json;version=1.0\"\n        },\n        \"imsOrgId\": \"8AB51935659C10E40A495FA2@AdobeOrg\",\n        \"datasetId\": \"664c6240852b342c9e24f7fe\",\n        \"source\": {\n            \"name\": \"Retail streaming connection dataflow\"\n        }\n    },\n    \"body\": {\n        \"xdmMeta\": {\n            \"schemaRef\": {\n                \"id\": \"https://ns.adobe.com/demopotemea/schemas/7390c88968c2015c0ef847e9ec4aa9e524b1ab584d64b4c5\",\n                \"contentType\": \"application/vnd.adobe.xed-full+json;version=1.0\"\n            }\n        },\n        \"xdmEntity\": {\n            \"_demopotemea\": {\n                \"identification\": {\n                    \"loyaltyID\": \"streming_loy_xyz\"\n                },\n                \"transactionDetails\": {\n                    \"productList\": [\n                        \"Jacket\"\n                    ],\n                    \"totalAmount\": 123.00\n                }\n            },\n            \"_id\": \"adssadasdasdasdsddfa\",\n            \"eventType\": \"commerce.purchases\",\n            \"timestamp\": \"{{TIMESTAMP}}\"\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dcs.adobedc.net/collection/976a4f9e053cad6a2b5ea1c80ea8649ba6054a2e02b5b1bd3a3f6f82b2373b59",
+					"protocol": "https",
+					"host": [
+						"dcs",
+						"adobedc",
+						"net"
+					],
+					"path": [
+						"collection",
+						"976a4f9e053cad6a2b5ea1c80ea8649ba6054a2e02b5b1bd3a3f6f82b2373b59"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
