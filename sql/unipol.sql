@@ -51,3 +51,25 @@ SELECT DATE(timestamp) AS giorno,
 FROM unipolsai_it_web_prod_midvalues
 GROUP BY DATE(timestamp)
 ORDER BY DATE(timestamp) DESC;
+
+
+INSERT INTO
+    glassbox_test_join
+SELECT
+    t._id,
+    t.timestamp,
+    struct(
+        struct(
+            t.ecid as ecid,
+            t.crmid as crmId
+        ) identification,
+        struct(
+            t.actionVisualName as actionVisualName,
+            t.cookieCls as cookieCls,
+            t.domValue as domValue,
+            t.joinId as joinId,
+            t.uri as uri
+        ) struggleDetails
+    ) _unipol
+FROM
+    v_glassbox AS t;
